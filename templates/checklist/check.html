@@ -1,0 +1,121 @@
+{% extends 'checklist/base.html' %}
+{% block title %}
+{{equipment}}
+{% endblock %}
+{% block body %}
+
+
+<div class="page__bd page__bd_spacing" style='padding-left:10px;padding-right:10px'>
+
+  <div class="weui-flex__item">
+            <div class="weui-tab">
+                    <div class="weui-navbar">
+                    <div class="weui-navbar__item">
+                        日常检查保养记录表
+                    </div>
+                   </div>
+
+            </div>
+                </div> 
+    <div style='padding-top:60px;'><div>
+
+
+
+    <div class="weui-flex">
+            <div><div class="placeholder">设备名称:&nbsp; &nbsp;</div></div>
+            <div class="weui-flex__item"><div class="placeholder"> {{equipment}}</div></div>
+    </div>
+    <div class="weui-flex">
+            <div><div class="placeholder">使用班组:&nbsp; &nbsp;</div></div>
+            <div class="weui-flex__item"><div class="placeholder">{{equipment.team}}</div></div>
+    </div>
+
+    <div class="weui-flex">
+            <div><div class="placeholder">记录日期:&nbsp; &nbsp;</div></div>
+            <div class="weui-flex__item"><div class="placeholder"></div>{{datetime|date:"Y-m-d" }}</div>
+    </div>
+
+    <div class="weui-flex">
+            <div><div class="placeholder">记录人员:&nbsp; &nbsp;</div></div>
+            <div class="weui-flex__item"><div class="placeholder"></div></div>
+    </div>
+
+</div>
+<br />
+<form  method="post" enctype="multipart/form-data">
+
+{% for cp in cps %}
+{% ifequal cp.style 1 %}
+        <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <a>{{forloop.counter}}.{{ cp.title }}</a>
+                </div>
+                 <div class="weui-cell__ft">
+                    <input class="weui-switch" data-com.agilebits.onepassword.user-edited="yes" type="checkbox">
+                    </input>
+                </div>
+        </div>
+{% endifequal %}
+{% ifequal cp.style 2 %}
+        <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <a>{{ cp.title }}</a>
+                </div>
+                 <div class="weui-cell__ft">
+                    <input name="value" class="weui-input" type="text" placeholder="0" />
+                </div>
+        </div>
+{% endifequal %}
+
+{% ifequal cp.style 3 %}
+        <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <a>{{ cp.title }}</a>
+                </div>
+                 <div class="weui-cell__ft">
+                    <input name="value" class="weui-input" type="number" placeholder="0" />
+                </div>
+        </div>
+{% endifequal %}
+
+{% ifequal cp.style 4 %}
+<div class="weui-cells__title">{{ cp.title }}</div>
+<div class="weui-cells weui-cells_radio">
+            <label class="weui-cell weui-check__label" for="x11">
+                <div class="weui-cell__bd">
+                    <p> --  cell standard</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input class="weui-check" name="radio1" id="x11" data-com.agilebits.onepassword.user-edited="yes" type="radio">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="x12">
+
+                <div class="weui-cell__bd">
+                    <p> --  cell standard</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input name="radio1" class="weui-check" id="x12" checked="checked" data-com.agilebits.onepassword.user-edited="yes" type="radio">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+        </div>
+{% endifequal %}
+
+{% endfor %}
+<div class="weui-cell">
+            <div class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder="备注" rows="2" name="describe"></textarea>
+            </div>
+        </div>
+
+<div class="weui-btn-area" style="padding-top:20px">
+         <input type="submit" value="提交" class="weui-btn weui-btn_primary">        
+</div>
+</form>
+
+{% endblock %}
+{% block company %}
+{{ equipment.template.company.name }}
+{% endblock %}

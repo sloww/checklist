@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+<title>{% block title %}太码系统{% endblock %}</title>
+
+<link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css"/>
+<link rel="stylesheet" href="https://weui.io/example.css">
+</head>
+<body ontouchstart>
+
+    {% block body %}block {% endblock %}
+
+    <div class="page__ft" style="padding-top:40px">
+        <div class="weui-footer">
+            <p class="weui-footer__links">
+                <a href="tel://{{data_master.tel}}" class="weui-footer__link" ”>{{data_master.tel}}</a>
+            </p>
+            <p class="weui-footer__links">
+                <a  class="weui-footer__link">{% block company %}{% endblock %}</a>
+            </p>
+            <p class="weui-footer__text">Copyright &copy; 2012-2018 TSLink.cc</p>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+</body>
+</html>
