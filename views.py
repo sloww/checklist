@@ -1,7 +1,7 @@
 #coding:utf-8
 
 from django.http import HttpResponse
-from .models import  Company, User, Template, Equipment ,Record, CheckPoint
+from .models import  Company, User, Template, Equipment ,Record, CheckPoint,RecordPoint
 
 from django.shortcuts import render, redirect
 from django.views.decorators import csrf
@@ -43,10 +43,34 @@ def index(request):
 
 def check(request, uuid):
     response = "not exist"
+
     if Equipment.objects.filter(uuid = uuid).count()>0:
         equipment = Equipment.objects.get(uuid = uuid)
-        cps = CheckPoint.objects.filter(template = equipment.template)
-        context = {'equipment': equipment,'cps':cps,'datetime':datetime.now()}
+        cps = CheckPoint.objects.filter(template = equipment.template).order_by('no','pk')
+
+        user = User() 
+        if request.POST:
+            record = Record()
+            record.equipment = equipment
+            record.datetime = datetime.now()
+            record.remark = request.POST['remark']
+            record.teamstr = equipment.team.name
+            record.save()
+            print(request.POST)
+            for cp in cps:
+                rp = RecordPoint()
+                rp.record = record
+                rp.title = cp.title
+                rp.style = cp.style
+                rp.no = cp.no
+                if cp.title in request.POST.keys():
+                    rp.value = request.POST[cp.title]
+                else:
+                    rp.value = 'off' 
+                rp.save() 
+
+        records = Record.objects.filter(equipment=equipment)
+        context = {'equipment': equipment,'cps':cps,'datetime':datetime.now(),'user':user,'records':records,}
         return render(request, 'checklist/check.html', context)
     else:
         return HttpResponse(response)

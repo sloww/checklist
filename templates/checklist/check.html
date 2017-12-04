@@ -1,6 +1,6 @@
 {% extends 'checklist/base.html' %}
 {% block title %}
-{{equipment}}
+
 {% endblock %}
 {% block body %}
 
@@ -11,7 +11,7 @@
             <div class="weui-tab">
                     <div class="weui-navbar">
                     <div class="weui-navbar__item">
-                        日常检查保养记录表
+                        {{equipment.template.title}}
                     </div>
                    </div>
 
@@ -35,34 +35,37 @@
             <div class="weui-flex__item"><div class="placeholder"></div>{{datetime|date:"Y-m-d" }}</div>
     </div>
 
+    {% if user.name %}
     <div class="weui-flex">
             <div><div class="placeholder">记录人员:&nbsp; &nbsp;</div></div>
-            <div class="weui-flex__item"><div class="placeholder"></div></div>
+            <div class="weui-flex__item"><div class="placeholder">{{user.name}}</div></div>
     </div>
+     {% endif %}
 
 </div>
-<br />
 <form  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
+<div class="weui-cells__title">检查保养内容</div>
 {% for cp in cps %}
 {% ifequal cp.style 1 %}
         <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <a>{{forloop.counter}}.{{ cp.title }}</a>
+                    <a>{{forloop.counter}}. {{ cp.title }}</a>
                 </div>
                  <div class="weui-cell__ft">
-                    <input class="weui-switch" data-com.agilebits.onepassword.user-edited="yes" type="checkbox">
-                    </input>
+                    <label for="{{cp.title}}" class="weui-switch-cp">
+                        <input id="{{cp.title}}"  name="{{cp.title}}" class="weui-switch-cp__input" type="checkbox">
+                        <div class="weui-switch-cp__box"></div>
+                    </label>
                 </div>
         </div>
 {% endifequal %}
-{% ifequal cp.style 2 %}
+{% ifequal cp.style 4 %}
         <div class="weui-cell">
+        <div class ="weui-cell__title">{{forloop.counter}}. {{ cp.title }}:&nbsp; </div>
                 <div class="weui-cell__bd">
-                    <a>{{ cp.title }}</a>
-                </div>
-                 <div class="weui-cell__ft">
-                    <input name="value" class="weui-input" type="text" placeholder="0" />
+                    <input name="{{cp.title}}" class="weui-input" type="text" placeholder="" />
                 </div>
         </div>
 {% endifequal %}
@@ -70,17 +73,23 @@
 {% ifequal cp.style 3 %}
         <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <a>{{ cp.title }}</a>
+                    <a>{{forloop.counter}}. {{ cp.title }}</a>
                 </div>
                  <div class="weui-cell__ft">
-                    <input name="value" class="weui-input" type="number" placeholder="0" />
+                    <input name="{{cp.title}}" class="weui-input" type="number" placeholder="" />
                 </div>
         </div>
 {% endifequal %}
 
-{% ifequal cp.style 4 %}
-<div class="weui-cells__title">{{ cp.title }}</div>
+{% ifequal cp.style 2 %}
+        
 <div class="weui-cells weui-cells_radio">
+<div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <a>{{forloop.counter}}. {{ cp.title }}</a>
+                </div>
+        </div>
+
             <label class="weui-cell weui-check__label" for="x11">
                 <div class="weui-cell__bd">
                     <p> --  cell standard</p>
@@ -106,7 +115,7 @@
 {% endfor %}
 <div class="weui-cell">
             <div class="weui-cell__bd">
-                <textarea class="weui-textarea" placeholder="备注" rows="2" name="describe"></textarea>
+                <textarea class="weui-textarea" placeholder="备注" rows="2" name="remark"></textarea>
             </div>
         </div>
 
@@ -114,6 +123,33 @@
          <input type="submit" value="提交" class="weui-btn weui-btn_primary">        
 </div>
 </form>
+
+
+
+
+<!-- 保养记录 -->
+
+<br />
+
+        <center>
+            <h3>
+            <div>记录</div>
+            </h3>
+        </center>
+        {% if equipment.records %}
+        <div class="weui-cells__title"> 共 {{records.count}} 条记录</div>
+                                <div class="weui-cells page__category-content">
+            {% for record in records %}
+            <div class="weui-cell weui-cell_access js_item" onclick="window.open('/tl/post/{{lfb.id}}/','mywindow');" style="cursor: pointer;">
+                <div class="weui-cell__bd">
+                <p>{{record }}</p>
+                </div>
+                <div class="weui-cell__ft">{{record}}</div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
 {% endblock %}
 {% block company %}

@@ -46,6 +46,7 @@ class User(models.Model):
         verbose_name_plural = '2.用户'
 
 class Template(models.Model):
+
     company = models.ForeignKey(
         'Company',
         on_delete = models.CASCADE,
@@ -56,8 +57,15 @@ class Template(models.Model):
     name = models.CharField(
         verbose_name = '设备名称',
         max_length = 100,
-        default = '0',
+        default = '',
         )
+
+    title = models.CharField(
+        verbose_name = '页面标题',
+        max_length = 100,
+        default = '',
+        )
+    
 
 
     def __str__(self):
@@ -114,6 +122,7 @@ class CheckPoint(models.Model):
 
 
 class Equipment(models.Model):
+
     template = models.ForeignKey(
         'Template',
         on_delete = models.CASCADE,
@@ -159,6 +168,7 @@ class Equipment(models.Model):
 
 
 class Record(models.Model):
+
     equipment = models.ForeignKey(
         'Equipment',
         on_delete = models.CASCADE,
@@ -170,6 +180,41 @@ class Record(models.Model):
         auto_now_add=True, 
         blank=True,
         )
+
+    remark = models.TextField(
+        blank = True,
+        verbose_name = '备注',
+        )
+
+    userstr = models.CharField(
+        max_length=100,
+        default='',
+        verbose_name = '记录人',
+        )
+
+    teamstr = models.CharField(
+        max_length=100,
+        default='',
+        verbose_name = '班组名称'
+        )
+
+    def __str__(self):
+        return '{}-{}'.format(self.equipment,self.datetime)
+
+    class Meta:
+        verbose_name = '检查记录'
+        verbose_name_plural = '6.检查记录'
+
+
+
+class RecordPoint(models.Model):
+    record = models.ForeignKey(
+        'Record',
+        on_delete = models.CASCADE,
+        related_name = 'Record_rp',
+        verbose_name = '记录表',
+        )
+    
 
     style = models.IntegerField(
         default = 1,
@@ -202,10 +247,9 @@ class Record(models.Model):
         )
 
 
-
     def __str__(self):
-        return '{}-{}'.format(self.equipment,self.value)
+        return '{}-{}'.format(self.record,self.value)
 
     class Meta:
-        verbose_name = '检查记录'
-        verbose_name_plural = '6.检查记录'
+        verbose_name = '检查记录明细'
+        verbose_name_plural = '7.检查记录明细'

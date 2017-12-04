@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Company, User, Template, Equipment ,Record, CheckPoint,Team
+from .models import  Company, User, Template, Equipment ,Record, CheckPoint,Team, RecordPoint
 from v1.admin import admin_site
 
 from searchadmin.admin import SelectModelAdmin
@@ -23,6 +23,7 @@ admin_site.register(User)
 admin_site.register(Template)
 admin_site.register(Equipment,EquipmentAdmin)
 admin_site.register(Record)
+admin_site.register(RecordPoint)
 admin_site.register(CheckPoint)
 admin_site.register(Team)
 
